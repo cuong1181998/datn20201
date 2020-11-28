@@ -138,20 +138,4 @@ def load_detector():
         args.poly = True
     return net, refine_net
 
-if __name__ == '__main__':
-    t = time.time()
-    net, refine_net = load_detector()
-    image_path = "/home/son/Desktop/datn20201/resource/img/receipt_1017.jpg"
-    image = loadImage(image_path)
-    # image = resize_img(image,640)
-    image = cv2.resize(image,(480,960))
-    t_start = time.time()
-    bboxes, polys, score_text = extract_text_box(net, image, args.text_threshold, args.link_threshold, args.low_text, args.cuda, args.poly, refine_net)
-    print('time inference: {:0.3f}s  '.format(time.time()-t_start))
-    print('image size: ', image.shape)
-    # save score text
-    filename, file_ext = os.path.splitext(os.path.basename(image_path))
-    mask_file = result_folder + "/res_" + filename + '_mask.jpg'
-    # cv2.imwrite(mask_file, score_text)
-    saveResult(image_path, image, polys, dirname=result_folder)
 

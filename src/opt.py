@@ -42,7 +42,7 @@ def get_config():
     parser.add_argument('--test_folder', default='/home/son/Desktop/text-detection/bill', type=str, help='folder path to input images')
     parser.add_argument('--refine', default=False, action='store_true', help='enable link refiner')
     parser.add_argument('--refiner_model', default='./weights/craft_refiner_CTW1500.pth', type=str, help='pretrained refiner model')
-
+    parser.add_argument('--img_path', default='../SROIE2019/task1_2_test(361p)/', type=str, help='data folder for eval')
     args = parser.parse_args()
 
     return args

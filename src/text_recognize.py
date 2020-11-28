@@ -47,7 +47,7 @@ def load_recognizer():
     model = torch.nn.DataParallel(model).to(device)
 
     # load model
-    print('loading pretrained model from %s' % args.saved_model)
+    # print('loading pretrained model from %s' % args.saved_model)
     model.load_state_dict(torch.load(args.saved_model, map_location=device))
     return model, converter
 
@@ -94,7 +94,7 @@ def extract_text(model,converter,image,poly,image_path):
             log = open(f'./log_demo_result.txt', 'a')
             dashed_line = '-' * 80
             head = f'{"image_path":25s}\t{"predicted_labels":25s}\tconfidence score'            
-            print(f'{dashed_line}\n{head}\n{dashed_line}')
+            # print(f'{dashed_line}\n{head}\n{dashed_line}')
             log.write(f'{dashed_line}\n{head}\n{dashed_line}\n')
             preds_prob = F.softmax(preds, dim=2)
             preds_max_prob, _ = preds_prob.max(dim=2)
@@ -106,7 +106,7 @@ def extract_text(model,converter,image,poly,image_path):
                 text_results.append(pred)
                 # calculate confidence score (= multiply of pred_max_prob)
                 confidence_score = pred_max_prob.cumprod(dim=0)[-1]
-                print(f'{pred:25s}\t{confidence_score:0.4f}')
+                # print(f'{pred:25s}\t{confidence_score:0.4f}')
                 log.write(f'{pred:25s}\t{confidence_score:0.4f}\n')
             log.close()
 
@@ -115,25 +115,10 @@ def extract_text(model,converter,image,poly,image_path):
         img2csv = []
         for key, value in num_rows_dict.items():
             for i in value:
-            #     res = res + (" ".join(text_results[tmp:tmp+i[0]])) + ' '
-            #
-            # res += '\n'
-                flatten_arr = np.array(i[1]).flatten()
-                point_2_string = list(map(str, flatten_arr))
-                img2csv.append([1,*point_2_string," ".join(text_results[tmp:tmp+i[0]])])
+                # res = res + ("\n".join(text_results[tmp:tmp+i[0]])).upper() + '\n' // convert uppercase if SROIE data set
+                res = res + ("\n".join(text_results[tmp:tmp+i[0]]))+ '\n'
                 tmp += i[0]
-        #write to csv:
-        df = pd.DataFrame(img2csv)
-        df.to_csv('/home/son/Desktop/datn20201/resource/box/'+image_path.split('/')[-1][:-3]+'tsv', index=False, header=False,
-                  quotechar='',escapechar='\\',quoting=csv.QUOTE_NONE)
+                
+        with open('./result'+image_path.split('/')[-1][:-3]+'txt', "w") as outfile:
+          outfile.write(res)
     return res
-
-# if __name__ == '__main__':
-#       # same with ASTER setting (use 94 char).
-#
-#     cudnn.benchmark = True
-#     cudnn.deterministic = True
-#     args.num_gpu = torch.cuda.device_count()
-#
-#     model, converter = load_recognizer()
-#     extract_text(model, converter)
