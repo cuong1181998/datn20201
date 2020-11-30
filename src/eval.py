@@ -35,13 +35,13 @@ def main(args,folder):
       t_start_1 = time.time()
       image_path = folder + os.path.splitext(os.path.basename(im_fn))[0] + os.path.splitext(os.path.basename(im_fn))[1]
       print(image_path)
-      t_start_2 = time.time()
       bboxes, polys, score_text = extract_text_box(net, image, args.text_threshold,
                                                   args.link_threshold, args.low_text,
                                                   args.cuda, args.poly, refine_net)
+      t_start_2 = time.time()
       text = extract_text(model, converter, image, polys, image_path)
-      print('ALL: ' + time.time() - t_start_1)
-      print('REG: ' + time.time() - t_start_2)
+      print(time.time() - t_start_1)
+      print(time.time() - t_start_2)
 if __name__ == '__main__':
     args = get_config()
     main(args,args.img_path)

@@ -119,6 +119,6 @@ def extract_text(model,converter,image,poly,image_path):
                 res = res + ("\n".join(text_results[tmp:tmp+i[0]]))+ '\n'
                 tmp += i[0]
                 
-        with open('./result'+image_path.split('/')[-1][:-3]+'txt', "w") as outfile:
+        with open('./result/'+image_path.split('/')[-1][:-3]+'txt', "w") as outfile:
           outfile.write(res)
     return res
